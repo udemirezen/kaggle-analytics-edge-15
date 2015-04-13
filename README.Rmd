@@ -1,0 +1,11 @@
+---
+title: "The Analytics Edge - Kaggle Competition 2015"
+author: "Jose A. Dianes"
+date: "13 April 2015"
+output:
+  html_document:
+    keep_md: yes
+    theme: cosmo
+    toc: yes
+---
+

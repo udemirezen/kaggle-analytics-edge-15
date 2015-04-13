@@ -1,0 +1,10 @@
+config.file.csv
+.Rproj.user
+.Rhistory
+.RData
+*.Rproj
+
+
+trees/claims/ClaimsData.csv
+
+text analytics/twitter/tweets.csv

@@ -1,3 +1,4 @@
-# The Analytics Edge - Kaggle Competition 2015  
+# The Analytics Edge - Kaggle Competition 2015
+Jose A. Dianes  
+13 April 2015  
 
-Solution using R to The Analytics Edge Kaggel competition for 2015
