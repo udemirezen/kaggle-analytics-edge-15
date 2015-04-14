@@ -490,10 +490,33 @@ mySubmission <- data.frame(
 write.csv(mySubmission, "SubmissionMetaTextRF.csv", row.names=FALSE)
 ```
 
+### A look at difficult cases  
 
-# Cluster helps us understand data  
+Let's check what is in those cases that our finest model (`metaTextRfModel`)
+didn't classify properly. This will give us some clues about new predictors
+or ways to approach the problem.  
 
-# Either cluster then predict (multiple predictors), or use most frequent terms from each cluster (term weighting)  
+# About dates  
+
+Maybe an article date is not so important, but what about the day of the week
+or the month of the year? Certain periods are more likely to have readers than 
+others.  
+
+
+# Cross-validation on Random Forests  
+
+
+# TF-IDF  
+
+By removing sparseness based just on counts we might be removing some important
+words. A better approach is using TF-IDF.  
+
+# Clustering    
+
+- By clustering on the corpus and then table for Popular, we will extract
+words that make an article popular?  
+- Cluster then predict  
+
 
 # Experiment: using separate models for each section and average them manually with different weights   
 
