@@ -117,8 +117,8 @@ retrain/test the models using this new split.
 
 ```{r}
 spl <- sample.split(headlineWordsTrain$Popular, .7)
-evalHeadlineWordsTrain <- subset(headlineWordsTrain, spl==T)
-evalHeadlineWordsTest <- subset(headlineWordsTrain, spl==F)
+evalHeadlineWordsTrain <- headlineWordsTrain[spl==T,]
+evalHeadlineWordsTest <- headlineWordsTrain[spl==F,]
 ```
 
 Train the model.  
@@ -263,23 +263,23 @@ In order to find out the first ones, we will build models using just them and
 not data. In order to find out the text variables, we will create different 
 corpora and repreat the initial approach. Finally we will combine them.  
 
-## Logistic regression on metadata  
-
 Let's build a new dataset including just the three factor variables and the date.  
 
 ```{r}
 newsTrainMeta <- data.frame(
     Popular=newsTrain$Popular,
-    NewsDesk = as.factor(newsTrain$NewsDesk),
-    SectionName = as.factor(newsTrain$SectionName),
-    SubsectionName = as.factor(newsTrain$SubsectionName)
+    NewsDesk = factor(newsTrain$NewsDesk, levels=levels(as.factor(newsTrain$NewsDesk))),
+    SectionName = factor(newsTrain$SectionName, levels=levels(as.factor(newsTrain$SectionName))),
+    SubsectionName = factor(newsTrain$SubsectionName, levels=levels(as.factor(newsTrain$Subsection)))
     )
 newsTestMeta <- data.frame(
-    NewsDesk = factor(newsTest$NewsDesk, levels=levels(newsTrainMeta$NewsDesk)),
-    SectionName = factor(newsTest$SectionName, levels=levels(newsTrainMeta$SectionName)),
-    SubsectionName = factor(newsTest$SubsectionName, levels=levels(newsTrainMeta$Subsection))
+    NewsDesk = factor(newsTest$NewsDesk, levels=levels(as.factor(newsTrain$NewsDesk))),
+    SectionName = factor(newsTest$SectionName, levels=levels(as.factor(newsTrain$SectionName))),
+    SubsectionName = factor(newsTest$SubsectionName, levels=levels(as.factor(newsTrain$Subsection)))
     )
 ```
+
+## Logistic regression on metadata  
 
 Now we build a linear model using all the variables.  
 
@@ -296,8 +296,9 @@ the bag of words section.
 
 ```{r}
 spl <- sample.split(newsTrainMeta$Popular, .75)
-evalNewsTrain <- subset(newsTrainMeta, spl==T)
-evalNewsTest <- subset(newsTrainMeta, spl==F)
+# Subset seems to remove factor levels so we subset dataframes by index
+evalNewsTrain <- newsTrainMeta[spl==T,]
+evalNewsTest <- newsTrainMeta[spl==F,]
 ```
 
 Build again the model.  
@@ -325,7 +326,7 @@ We get an `auc` value of `r metaLogAuc`. The metadata by itself improves the
 text based model. This makes sense since most people have preference for specific
 subjects and this makes them more popular.  
 
-## Threes and Random Forests on metadata  
+## Trees and Random Forests on metadata  
 
 Randome forests are usually a good approach to classify non linear datasets like
 the one we have based on metadata. But fist let's us try with a plain tree so we
@@ -336,7 +337,7 @@ metaCartModel <- rpart(Popular~., data=evalNewsTrain, method="class")
 prp(metaCartModel)
 ```
 
-The three is clearly to coarse. It classifies popular articles as being just
+The three is clearly too coarse. It classifies popular articles as being just
 part of a very specific grup of sections. Let's try with increasing the three
 complexity, and also showing probabilities that are more expressive.  
 
@@ -359,7 +360,6 @@ metaCartAuc
 
 Not bad! We could try using cross-validation to find the right cp value.  
 
-
 Define cross-validation experiment.  
 
 ```{r}
@@ -377,7 +377,7 @@ tt
 Create a new CART model, predict, and evaluate.  
 
 ```{r}
-metaCartCvModel <- rpart(Popular ~ ., data = evalNewsTrain, cp = 0.02)
+metaCartCvModel <- rpart(Popular ~ ., data = evalNewsTrain, cp = 0.01)
 metaCartCvPred <- predict(metaCartCvModel, newdata = evalNewsTest)
 metaCartCvRocr <- prediction(metaCartCvPred, evalNewsTest$Popular)
 metaCartCvAuc <- as.numeric(performance(metaCartCvRocr, "auc")@y.values)
@@ -406,6 +406,8 @@ metaRfAuc <- as.numeric(performance(metaRfRocr, "auc")@y.values)
 metaRfAuc
 ```
 
+This is our best model so far.  
+
 ## Adding text to metadata  
 
 Can we improve the accuracy of the metadata-based models by using our bag-of-words
@@ -420,8 +422,8 @@ newsTrainMetaText$Popular <- NULL # remove one of the Popular columns since they
 Now we need to create again our train splits.  
 
 ```{r}
-evalNewsMetaTextTrain <- subset(newsTrainMetaText, spl==T)
-evalNewsMetaTextTest <- subset(newsTrainMetaText, spl==F)
+evalNewsMetaTextTrain <- newsTrainMetaText[spl==T,]
+evalNewsMetaTextTest <- newsTrainMetaText[spl==F,]
 ```
 
 ### Logistic Regression  
@@ -456,10 +458,10 @@ tt <- train(Popular ~ ., data = evalNewsMetaTextTrain, method = "rpart", trContr
 tt
 ```
 
-This time we get `cp=0.01`. Let's build the model.  
+This time we get `cp=0.02`. Let's build the model.  
 
 ```{r}
-metaTextCartCvModel <- rpart(Popular~., data=evalNewsMetaTextTrain, cp=0.01)
+metaTextCartCvModel <- rpart(Popular~., data=evalNewsMetaTextTrain, cp=0.02)
 metaTextCartCvPred <- predict(metaTextCartCvModel, newdata = evalNewsMetaTextTest)
 metaTextCartCvRocr <- prediction(metaTextCartCvPred, evalNewsMetaTextTest$Popular)
 metaTextCartCvAuc <- as.numeric(performance(metaTextCartCvRocr, "auc")@y.values)
@@ -490,17 +492,77 @@ mySubmission <- data.frame(
 write.csv(mySubmission, "SubmissionMetaTextRF.csv", row.names=FALSE)
 ```
 
-### A look at difficult cases  
-
-Let's check what is in those cases that our finest model (`metaTextRfModel`)
-didn't classify properly. This will give us some clues about new predictors
-or ways to approach the problem.  
-
 # About dates  
 
 Maybe an article date is not so important, but what about the day of the week
 or the month of the year? Certain periods are more likely to have readers than 
 others.  
+
+So let's add both things, day of the week and month to our dataset.  
+
+```{r}
+DayOfTheWeek <- weekdays(as.Date(newsTrain$PubDate))
+MonthOfTheYear <- months(as.Date(newsTrain$PubDate))
+newsTrainMetaTextDate <- cbind(newsTrainMetaText, DayOfTheWeek, MonthOfTheYear)
+evalMetaTextDateTrain <- newsTrainMetaTextDate[spl==T,]
+evalMetaTextDateTest <- newsTrainMetaTextDate[spl==F,]
+```
+
+And let's compare the results with other linear models we trained before.  
+
+```{r}
+metaTextDateLogModel <- glm(Popular~., data=evalMetaTextDateTrain, family=binomial)
+summary(metaTextDateLogModel)
+```
+
+It seems that the day of the week pays an important role in popularity, but not
+the month of the year. At least for logistic regression.  
+
+But let's calculate the `ac` value.  
+
+```{r}
+metaTextDateLogPred <- predict(metaTextDateLogModel, newdata=evalMetaTextDateTest, type="response")
+metaTextDateLogRocr <- prediction(metaTextDateLogPred, evalMetaTextDateTest$Popular)
+metaTextDateLogAuc <- as.numeric(performance(metaTextDateLogRocr, "auc")@y.values)
+metaTextDateLogAuc
+```
+
+And we see a slight improvement! Let's build our finest model so far, the random
+forest.  
+
+```{r}
+metaTextDateRfModel <- randomForest(Popular~., data=evalMetaTextDateTrain)
+metaTextDateRfPred <- predict(metaTextDateRfModel, newdata=evalMetaTextDateTest)
+metaTextDateRfRocr <- prediction(metaTextDateRfPred, evalMetaTextDateTest$Popular)
+metaTextDateRfAuc <- as.numeric(performance(metaTextDateRfRocr, "auc")@y.values)
+metaTextDateRfAuc
+```
+
+That also improves the model without dates. Let's use this one to save our 
+results file to Kaggle.  
+
+
+```{r}
+metaTextDateRfModel <- randomForest(Popular~., data=newsTrainMetaTextDate)
+DayOfTheWeek <- factor(weekdays(as.Date(newsTest$PubDate)), 
+                         levels=levels(newsTrainMetaTextDate$DayOfTheWeek))
+MonthOfTheYear <- factor(months(as.Date(newsTest$PubDate)), 
+                         levels=levels(newsTrainMetaTextDate$MonthOfTheYear))
+newsTestMetaTextDate <- cbind(newsTestMeta, headlineWordsTest, DayOfTheWeek, MonthOfTheYear)
+metaTextDateRfPred <- predict(metaTextDateRfModel, newdata=newsTestMetaTextDate)
+mySubmission <- data.frame(
+    UniqueID = newsTest$UniqueID, 
+    Probability1 = abs(metaTextRfPred)
+    )
+write.csv(mySubmission, "SubmissionMetaTextDateRF.csv", row.names=FALSE)
+```
+
+
+### A look at difficult cases  
+
+Let's check what is in those cases that our finest model (`metaTextRfModel`)
+didn't classify properly. This will give us some clues about new predictors
+or ways to approach the problem.  
 
 
 # Cross-validation on Random Forests  
@@ -511,6 +573,12 @@ others.
 By removing sparseness based just on counts we might be removing some important
 words. A better approach is using TF-IDF.  
 
+In order to use TF-IDF with the `tm` library command `DocumentTermFrequency` we
+just need to include a control term.  
+
+```{r}
+control = list(weighting = weightTfIdf)
+```
 # Clustering    
 
 - By clustering on the corpus and then table for Popular, we will extract
