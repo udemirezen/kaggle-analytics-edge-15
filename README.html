@@ -67,8 +67,106 @@ img {
 <h4 class="date"><em>13 April 2015</em></h4>
 </div>
 
+<div id="TOC">
+<ul>
+<li><a href="#task-description">Task description</a></li>
+<li><a href="#data-loading-and-preparation">Data loading and preparation</a></li>
+<li><a href="#a-simple-bag-of-words-model">A simple bag-of-words model</a><ul>
+<li><a href="#preparing-the-corpus">Preparing the corpus</a></li>
+<li><a href="#training-the-models">Training the models</a><ul>
+<li><a href="#logistic-regression">Logistic regression</a></li>
+<li><a href="#cart">CART</a></li>
+<li><a href="#random-forest">Random forest</a></li>
+</ul></li>
+<li><a href="#model-evaluation">Model evaluation</a></li>
+</ul></li>
+<li><a href="#a-richer-bag-of-words-model">A richer bag of words model</a></li>
+<li><a href="#cluster-helps-us-understand-data">Cluster helps us understand data</a></li>
+<li><a href="#either-cluster-then-predict-multiple-predictors-or-use-most-frequent-terms-from-each-cluster-term-weighting">Either cluster then predict (multiple predictors), or use most frequent terms from each cluster (term weighting)</a></li>
+<li><a href="#experiment-using-separate-models-for-each-section-and-average-them-manually-with-different-weights">Experiment: using separate models for each section and average them manually with different weights</a></li>
+</ul>
+</div>
 
-
+<div id="task-description" class="section level1">
+<h1>Task description</h1>
+</div>
+<div id="data-loading-and-preparation" class="section level1">
+<h1>Data loading and preparation</h1>
+<pre class="r"><code>library(tm)</code></pre>
+<p>Let’s start by reading the trian and test data into the corresponding data frames.</p>
+<pre class="r"><code>newsTrain &lt;- read.csv(&quot;data/NYTimesBlogTrain.csv&quot;, stringsAsFactors=FALSE)
+newsTest &lt;- read.csv(&quot;data/NYTimesBlogTest.csv&quot;, stringsAsFactors=FALSE)
+summary(newsTrain)</code></pre>
+<pre><code>##    NewsDesk         SectionName        SubsectionName    
+##  Length:6532        Length:6532        Length:6532       
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##    Headline           Snippet            Abstract        
+##  Length:6532        Length:6532        Length:6532       
+##  Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character  
+##                                                          
+##                                                          
+##                                                          
+##    WordCount         PubDate             Popular          UniqueID   
+##  Min.   :    0.0   Length:6532        Min.   :0.0000   Min.   :   1  
+##  1st Qu.:  187.0   Class :character   1st Qu.:0.0000   1st Qu.:1634  
+##  Median :  374.0   Mode  :character   Median :0.0000   Median :3266  
+##  Mean   :  524.4                      Mean   :0.1673   Mean   :3266  
+##  3rd Qu.:  723.2                      3rd Qu.:0.0000   3rd Qu.:4899  
+##  Max.   :10912.0                      Max.   :1.0000   Max.   :6532</code></pre>
+<p>From the summary we can see that we have several fields we could use to train our models.</p>
+</div>
+<div id="a-simple-bag-of-words-model" class="section level1">
+<h1>A simple bag-of-words model</h1>
+<p>As a first approach, we will use bag-of-words models for teh headline text.</p>
+<div id="preparing-the-corpus" class="section level2">
+<h2>Preparing the corpus</h2>
+<p>In order to build the corpus, we will go through the usual <code>tm</code> package calls.</p>
+<pre class="r"><code>corpusHeadline &lt;- Corpus(VectorSource(c(newsTrain$Headline, newsTest$Headline)))
+corpusHeadline &lt;- tm_map(corpusHeadline, tolower)
+corpusHeadline &lt;- tm_map(corpusHeadline, PlainTextDocument)
+corpusHeadline &lt;- tm_map(corpusHeadline, removePunctuation)
+corpusHeadline &lt;- tm_map(corpusHeadline, removeWords, stopwords(&quot;english&quot;))
+corpusHeadline = tm_map(corpusHeadline, stemDocument)</code></pre>
+<p>Now we are ready to convert our corpus to a DocumentTermMatrix, remove sparse terms, and turn it into a data frame. We selected one particular threshold to remove sparse terms. Later on we must try different ones.</p>
+<pre class="r"><code>dtm &lt;- DocumentTermMatrix(corpusHeadline)
+sparse &lt;- removeSparseTerms(dtm, 0.99)
+headlineWords = as.data.frame(as.matrix(sparse))</code></pre>
+<p>Let’s make sure our variable names are okay for R.</p>
+<pre class="r"><code>colnames(headlineWords) = make.names(colnames(headlineWords))</code></pre>
+</div>
+<div id="training-the-models" class="section level2">
+<h2>Training the models</h2>
+<div id="logistic-regression" class="section level3">
+<h3>Logistic regression</h3>
+</div>
+<div id="cart" class="section level3">
+<h3>CART</h3>
+</div>
+<div id="random-forest" class="section level3">
+<h3>Random forest</h3>
+</div>
+</div>
+<div id="model-evaluation" class="section level2">
+<h2>Model evaluation</h2>
+</div>
+</div>
+<div id="a-richer-bag-of-words-model" class="section level1">
+<h1>A richer bag of words model</h1>
+</div>
+<div id="cluster-helps-us-understand-data" class="section level1">
+<h1>Cluster helps us understand data</h1>
+</div>
+<div id="either-cluster-then-predict-multiple-predictors-or-use-most-frequent-terms-from-each-cluster-term-weighting" class="section level1">
+<h1>Either cluster then predict (multiple predictors), or use most frequent terms from each cluster (term weighting)</h1>
+</div>
+<div id="experiment-using-separate-models-for-each-section-and-average-them-manually-with-different-weights" class="section level1">
+<h1>Experiment: using separate models for each section and average them manually with different weights</h1>
+</div>
 
 
 </div>
