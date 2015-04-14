@@ -557,6 +557,9 @@ mySubmission <- data.frame(
 write.csv(mySubmission, "SubmissionMetaTextDateRF.csv", row.names=FALSE)
 ```
 
+# About times of the day?  
+
+see https://courses.edx.org/c4x/MITx/15.071x_2/asset/Unit7_Crime.R
 
 ### A look at difficult cases  
 
@@ -579,6 +582,12 @@ just need to include a control term.
 ```{r}
 control = list(weighting = weightTfIdf)
 ```
+
+# Add additional corpora  
+
+- Snippet  
+- Abstract  
+
 # Clustering    
 
 - By clustering on the corpus and then table for Popular, we will extract
