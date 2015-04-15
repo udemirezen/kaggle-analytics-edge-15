@@ -568,9 +568,6 @@ didn't classify properly. This will give us some clues about new predictors
 or ways to approach the problem.  
 
 
-# Cross-validation on Random Forests  
-
-
 # TF-IDF  
 
 By removing sparseness based just on counts we might be removing some important
@@ -587,6 +584,10 @@ control = list(weighting = weightTfIdf)
 
 - Snippet  
 - Abstract  
+
+
+# Cross-validation on Random Forests  
+
 
 # Clustering    
 
