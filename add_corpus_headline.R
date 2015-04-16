@@ -9,7 +9,7 @@ corpusHeadline <- tm_map(corpusHeadline, stemDocument)
 
 # Generate term matrix
 dtm <- DocumentTermMatrix(corpusHeadline)
-sparse <- removeSparseTerms(dtm, 0.995)
+sparse <- removeSparseTerms(dtm, 0.99)
 headlineWords <- as.data.frame(as.matrix(sparse))
 
 colnames(headlineWords) <- make.names(colnames(headlineWords))
@@ -25,7 +25,7 @@ one_star_terms <- names(which(summary(logModelHeadlineWords)$coefficients[,4]<0.
 
 # Leave just those terms that are different between popular and unpopular articles
 headlineWords <- subset(headlineWords, 
-                        select=names(headlineWords) %in% two_star_terms)
+                        select=names(headlineWords) %in% one_star_terms)
                     
 
 # Filter out common frequent terms

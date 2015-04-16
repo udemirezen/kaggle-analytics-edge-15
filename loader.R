@@ -13,6 +13,7 @@ newsTest <- read.csv("data/NYTimesBlogTest.csv", stringsAsFactors=FALSE)
 # Bind the data in order to do the transformations jusnt once
 newsAll <- rbind(newsTrain[,-9], newsTest)
 
+    
 # Extract date information
 newsAll$PubDate <- strptime(newsAll$PubDate, format="%Y-%m-%d %H:%M:%S")
 newsAll$DayOfTheWeek <- as.factor(weekdays(newsAll$PubDate))
@@ -31,4 +32,3 @@ Popular <- as.factor(newsTrain$Popular)
 newsTrain <- head(newsAll, nrow(newsTrain))
 newsTrain$Popular <- Popular
 newsTest <- tail(newsAll, nrow(newsTest))
-

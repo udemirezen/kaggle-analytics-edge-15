@@ -9,7 +9,7 @@ corpusSnippet <- tm_map(corpusSnippet, stemDocument)
 
 # Generate term matrix
 dtmSnippet <- DocumentTermMatrix(corpusSnippet)
-sparseSnippet <- removeSparseTerms(dtmSnippet, 0.995)
+sparseSnippet <- removeSparseTerms(dtmSnippet, 0.99)
 snippetWords <- as.data.frame(as.matrix(sparseSnippet))
 
 colnames(snippetWords) <- make.names(colnames(snippetWords))
@@ -25,7 +25,7 @@ snippet_one_star_terms <- names(which(summary(logModelSnippetWords)$coefficients
 
 # Leave just those terms that are different between popular and unpopular articles
 snippetWords <- subset(snippetWords, 
-                        select=names(snippetWords) %in% snippet_two_star_terms)
+                        select=names(snippetWords) %in% snippet_one_star_terms)
 
 # Split again
 snippetWordsTrain <- head(snippetWords, nrow(newsTrain))
