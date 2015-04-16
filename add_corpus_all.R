@@ -1,6 +1,8 @@
 # Prepare corpus using snippet
-newsTrain$AllText <- do.call(paste, newsTrain[,c("Headline","Snippet","Abstract")])
-newsTest$AllText <- do.call(paste, newsTest[,c("Headline","Snippet","Abstract")])
+# newsTrain$AllText <- do.call(paste, newsTrain[,c("Headline","Snippet","Abstract")])
+# newsTest$AllText <- do.call(paste, newsTest[,c("Headline","Snippet","Abstract")])
+newsTrain$AllText <- do.call(paste, newsTrain[,c("Headline","Snippet")])
+newsTest$AllText <- do.call(paste, newsTest[,c("Headline","Snippet")])
 
 corpusAll <- Corpus(VectorSource(c(newsTrain$AllText, newsTest$AllText)))
 corpusAll <- tm_map(corpusAll, tolower)
@@ -12,7 +14,7 @@ corpusAll <- tm_map(corpusAll, stemDocument)
 
 # Generate term matrix
 dtmAll <- DocumentTermMatrix(corpusAll)
-sparseAll <- removeSparseTerms(dtmAll, 0.998)
+sparseAll <- removeSparseTerms(dtmAll, 0.99)
 allWords <- as.data.frame(as.matrix(sparseAll))
 
 colnames(allWords) <- make.names(colnames(allWords))
@@ -27,7 +29,7 @@ all_one_star_terms <- names(which(summary(logModelAllWords)$coefficients[,4]<0.0
 
 # Leave just those terms that are different between popular and unpopular articles
 allWords <- subset(allWords, 
-                       select=names(allWords) %in% all_three_star_terms)
+                       select=names(allWords) %in% all_one_star_terms)
 
 # Split again
 allWordsTrain <- head(allWords, nrow(newsTrain))

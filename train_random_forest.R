@@ -1,8 +1,8 @@
 # do the train
 set.seed(1234)
 rfModel <- randomForest(
-    Popular ~ . - UniqueID,
-    data=evalNewsTrain, ntree=10000)
+    Popular ~ NewsDesk + SectionName + SubsectionName + DayOfTheWeek + HourOfTheDay + WordCount - UniqueID,
+    data=evalNewsTrain, ntree=500)
 
 # Calculate AUC
 rfPred <- predict(rfModel, newdata=evalNewsTest, type="prob")
