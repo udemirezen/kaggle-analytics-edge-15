@@ -1,7 +1,8 @@
 source("loader.R")
-source("add_corpus_headline.R")
-source("add_corpus_snippet.R")
-source("add_corpus_abstract.R")
+# source("add_corpus_headline.R")
+# source("add_corpus_snippet.R")
+# source("add_corpus_abstract.R")
+source("add_corpus_all.R")
 
 # Remove these as needed
 newsTrain$Headline <- NULL

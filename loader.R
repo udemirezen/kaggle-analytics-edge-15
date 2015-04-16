@@ -27,7 +27,7 @@ newsAll$SectionName <- as.factor(newsAll$SectionName)
 newsAll$SubsectionName <- as.factor(newsAll$SubsectionName)
 
 # Split again
-Popular <- newsTrain$Popular
+Popular <- as.factor(newsTrain$Popular)
 newsTrain <- head(newsAll, nrow(newsTrain))
 newsTrain$Popular <- Popular
 newsTest <- tail(newsAll, nrow(newsTest))
