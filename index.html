@@ -1,45 +1,101 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
+
   <head>
-    <meta charset="utf-8">
+    <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Kaggle-analytics-edge-15 by jadianes</title>
+    <meta name="description" content="Kaggle-analytics-edge-15 : Solution using R to The Analytics Edge Kaggel competition for 2015">
 
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Kaggle-analytics-edge-15</title>
   </head>
+
   <body>
-    <div class="wrapper">
-      <header>
-        <h1>Kaggle-analytics-edge-15</h1>
-        <p>Solution using R to The Analytics Edge Kaggel competition for 2015</p>
 
-        <p class="view"><a href="https://github.com/jadianes/kaggle-analytics-edge-15">View the Project on GitHub <small>jadianes/kaggle-analytics-edge-15</small></a></p>
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/jadianes/kaggle-analytics-edge-15">View on GitHub</a>
 
+          <h1 id="project_title">Kaggle-analytics-edge-15</h1>
+          <h2 id="project_tagline">Solution using R to The Analytics Edge Kaggel competition for 2015</h2>
 
-        <ul>
-          <li><a href="https://github.com/jadianes/kaggle-analytics-edge-15/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/jadianes/kaggle-analytics-edge-15/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/jadianes/kaggle-analytics-edge-15">View On <strong>GitHub</strong></a></li>
-        </ul>
-      </header>
-      <section>
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/jadianes/kaggle-analytics-edge-15/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/jadianes/kaggle-analytics-edge-15/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
         <h1>
-<a id="the-analytics-edge---kaggle-competition-2015" class="anchor" href="#the-analytics-edge---kaggle-competition-2015" aria-hidden="true"><span class="octicon octicon-link"></span></a>The Analytics Edge - Kaggle Competition 2015</h1>
+<a id="kaggle-15071x---the-analytics-edge-spring-2015" class="anchor" href="#kaggle-15071x---the-analytics-edge-spring-2015" aria-hidden="true"><span class="octicon octicon-link"></span></a>Kaggle 15.071x - The Analytics Edge (Spring 2015)</h1>
 
-<p>Jose A. Dianes<br>
-13 April 2015  </p>
+<p>Files for my solution to <a href="https://www.kaggle.com/c/15-071x-the-analytics-edge-competition-spring-2015">this Kaggle competition</a></p>
+
+<h2>
+<a id="task-description" class="anchor" href="#task-description" aria-hidden="true"><span class="octicon octicon-link"></span></a>Task description</h2>
+
+<p>The task description can be found <a href="https://www.kaggle.com/c/15-071x-the-analytics-edge-competition-spring-2015">here</a>:  </p>
+
+<p><em>In this competition, we challenge you to develop an analytics model that will help the New York Times understand the features of a blog post that make it popular.</em></p>
+
+<h2>
+<a id="files-description" class="anchor" href="#files-description" aria-hidden="true"><span class="octicon octicon-link"></span></a>Files description</h2>
+
+<h3>
+<a id="mainr" class="anchor" href="#mainr" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>main.R</code>
+</h3>
+
+<p>The main script calling the others in order to generate a prediction.  </p>
+
+<h3>
+<a id="loaderr" class="anchor" href="#loaderr" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>loader.R</code>
+</h3>
+
+<p>Loads data into a dataframe.  </p>
+
+<h3>
+<a id="add_corpus_xxxr" class="anchor" href="#add_corpus_xxxr" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>add_corpus_XXX.R</code>
+</h3>
+
+<p>Different scripts that generate a corpus from text fields and add them as
+predictors.  </p>
+
+<p>This process includes creating linear models to determine significative terms in order to do variable selection.  </p>
+
+<h3>
+<a id="split_evalr" class="anchor" href="#split_evalr" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>split_eval.R</code>
+</h3>
+
+<p>Splits training data into training and test. TODO: do cross validation.  </p>
+
+<h3>
+<a id="train_random_forestr" class="anchor" href="#train_random_forestr" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>train_random_forest.R</code>
+</h3>
+
+<p>Trains a <strong>Random Forest</strong> and makes predictions.  </p>
+
+<h3>
+<a id="results-folder" class="anchor" href="#results-folder" aria-hidden="true"><span class="octicon octicon-link"></span></a>
+<code>results</code> folder</h3>
+
+<p>Contains different predictions as CSV files.  </p>
       </section>
-      <footer>
-        <p>This project is maintained by <a href="https://github.com/jadianes">jadianes</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Kaggle-analytics-edge-15 maintained by <a href="https://github.com/jadianes">jadianes</a></p>
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
       </footer>
     </div>
-    <script src="javascripts/scale.fix.js"></script>
+
     
+
   </body>
 </html>
