@@ -40,3 +40,10 @@ Trains a **Random Forest** and makes predictions.
 
 Contains different predictions as CSV files.  
 
+## Future works  
+
+- Use ensemble methods.  
+- Do cross-validation for better parameter selection.  
+- Impute missing values for section/subsection. Right now empty values are taking as a factor level and therefore as meaninful for predictions.    
+- Do more exploratory data analysis, specially for missclassified cases (e.g. use word clouds).  
+- Filter out non memingful frequent terms in corpus (e.g. *new*, *york*, etc.)
